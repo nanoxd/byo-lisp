@@ -1,8 +1,8 @@
-# Variables
+/* Variables */
 int count;
 int count = 10;
 
-# Function Declarations
+/* Function Declarations */
 int add_together(int x, int y) {
   int result = x + y;
   return result;
@@ -11,7 +11,7 @@ int add_together(int x, int y) {
 int added = add_together(10, 18);
 
 
-# Structure Declarations
+/* Structure Declarations */
 typedef struct {
   float x;
   float y;
@@ -23,7 +23,7 @@ p.y = 10.0;
 
 float length = sqrt(p.x * p.x + p.y * p.y);
 
-# Conditional
+/* Conditional */
 int x = 12;
 if (x > 10 && x < 100) {
   puts("x is greater than ten and less than one hundred!");
@@ -31,7 +31,7 @@ if (x > 10 && x < 100) {
   puts("x is either less than eleven or greater than ninety-nine!");
 }
 
-# Loops
+/* Loops */
 int i = 10;
 while (i > 0) {
   puts("Loop Iteration");
