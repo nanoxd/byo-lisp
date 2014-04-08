@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   // In a never ending loop
   while (1) {
     // Output prompt and get input
-    char* input = readline("lispy> ");
+    char* input = readline("darkLisp> ");
 
     // Add input to history
     add_history(input);
