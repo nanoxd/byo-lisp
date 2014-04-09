@@ -29,22 +29,22 @@ void add_history(char* unused) {}
 
 int main(int argc, char** argv) {
 
-// Create parsers
-mpc_parser_t* Number = mpc.new("number");
-mpc_parser_t* Operator = mpc.new("operator");
-mpc_parser_t* Expr = mpc.new("expr");
-mpc_parser_t* Lispy = mpc.new("lispy");
+  // Create parsers
+  mpc_parser_t* Number = mpc_new("number");
+  mpc_parser_t* Operator = mpc_new("operator");
+  mpc_parser_t* Expr = mpc_new("expr");
+  mpc_parser_t* Lispy = mpc_new("lispy");
 
-// Define them
-mpca_lang(MPC_LANG_DEFAULT,
-    "
-      number : /-?[0-9]+/ ;                          \
-      operator : '+' | '-' | '*' | '/' ;             \
-      expr : <number> | '(' <operator> <expr>+ ')' ; \
-      lispy : /^/ <operator> <expr>+ /$/ ;           \
+  // Define them
+  mpca_lang(MPC_LANG_DEFAULT,
+      "                                                \
+        number : /-?[0-9]+/ ;                          \
+        operator : '+' | '-' | '*' | '/' ;             \
+        expr : <number> | '(' <operator> <expr>+ ')' ; \
+        lispy : /^/ <operator> <expr>+ /$/ ;           \
 
-    ",
-    Number, Operator, Expr, Lispy);
+      ",
+      Number, Operator, Expr, Lispy);
 
   // Print version and exit information
   puts("Lispy Version 0.0.0.0.1");
