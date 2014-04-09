@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "mpc.h"
 
 #ifdef _WIN32
 
@@ -27,6 +28,23 @@ void add_history(char* unused) {}
 #endif
 
 int main(int argc, char** argv) {
+
+// Create parsers
+mpc_parser_t* Number = mpc.new("number");
+mpc_parser_t* Operator = mpc.new("operator");
+mpc_parser_t* Expr = mpc.new("expr");
+mpc_parser_t* Lispy = mpc.new("lispy");
+
+// Define them
+mpca_lang(MPC_LANG_DEFAULT,
+    "
+      number : /-?[0-9]+/ ;                          \
+      operator : '+' | '-' | '*' | '/' ;             \
+      expr : <number> | '(' <operator> <expr>+ ')' ; \
+      lispy : /^/ <operator> <expr>+ /$/ ;           \
+
+    ",
+    Number, Operator, Expr, Lispy);
 
   // Print version and exit information
   puts("Lispy Version 0.0.0.0.1");
