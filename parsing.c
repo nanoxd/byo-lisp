@@ -46,6 +46,9 @@ enum { LVAL_NUM, LVAL_ERR, LVAL_SYM, LVAL_SEXPR };
 // Enumerable for possible error types
 enum { LERR_DIV_ZERO, LERR_BAD_OP, LERR_BAD_NUM };
 
+// Forward declare variables
+void lval_print(lval* v);
+
 // Create a new number type lval pointer
 lval* lval_num(long x) {
   lval* v = malloc(sizeof(lval));
@@ -137,24 +140,32 @@ lval* lval_read(mpc_ast_t* t) {
   return x;
 }
 
-// Print an "lval"
-void lval_print(lval v) {
-  switch (v.type) {
-    // If type is a number print it, then break out of the switch
-    case LVAL_NUM: printf("%li", v.num); break;
+void lval_expr_print(lval* v, char open, char close)
+{
+  for (int i = 0; i < v->count; i++) {
+    // Print value contained within
+    lval_print(v->cell[i]);
 
-    // If type is error
-    case LVAL_ERR:
-      // Check error type
-      if (v.err == LERR_DIV_ZERO) { printf("Error: Division by Zero!"); }
-      if (v.err == LERR_BAD_OP) { printf("Error: Invalid Operator!"); }
-      if (v.err == LERR_BAD_NUM) { printf("Error: Invalid Number!"); }
-    break;
+    // Don't print trailing space if last element
+    if (i != (v->count-1)) {
+      putchar(' ');
+    }
+  }
+}
+
+// Print an "lval"
+void lval_print(lval* v) {
+  switch (v->type) {
+    // If type is a number print it, then break out of the switch
+    case LVAL_NUM: printf("%li", v->num); break;
+    case LVAL_ERR: printf("Error: %s", v->err); break;
+    case LVAL_SYM: printf("%s", v->sym); break;
+    case LVAL_SEXPR: lval_expr_print(v, '(', ')'); break;
   }
 }
 
 // Print an lval followed by a newline
-void lval_println(lval v) { lval_print(v); putchar('\n'); }
+void lval_println(lval* v) { lval_print(v); putchar('\n'); }
 
 // Use operator string to see which operation to perform
 lval eval_op(lval x, char* op, lval y) {
@@ -232,8 +243,10 @@ int main(int argc, char** argv) {
     // Attempt to parse the user input
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, Lispy, &r)) {
-      lval result = eval(r.output);
-      lval_println(result);
+      lval* x = lval_read(r.output)
+      lval_println(x);
+      lval_del(x);
+
       mpc_ast_delete(r.output);
     } else {
       // Print the error
